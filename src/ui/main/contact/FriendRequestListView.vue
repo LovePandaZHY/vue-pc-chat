@@ -9,7 +9,8 @@
                         <img class="avatar" :src="friendRequest._target.portrait">
                         <div class="info">
                             <div class="name-action">
-                                <span class="name single-line">{{ friendRequest._target.displayName }}</span>
+                                <span class="name single-line" style="width: 30px;overflow: hidden;white-space: nowrap;text-overflow: ellipsis;">
+                                    {{ friendRequest._target.displayName }}</span>
                                 <span v-if="friendRequest.status === 1" class="status">{{
                                         $t('friend_request.accepted')
                                     }}</span>

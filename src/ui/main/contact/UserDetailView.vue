@@ -22,14 +22,14 @@
                         <label>{{ $t('common.wfc_id') }}</label>
                         <p>{{ user.name }}</p>
                     </li>
-                    <li>
+<!--                    <li>
                         <label>{{ $t('common.area') }}</label>
                         <p>{{ $t('common.unknown') }}</p>
                     </li>
                     <li>
                         <label>{{ $t('common.label') }}</label>
                         <p>{{ $t('misc.test_user') }}</p>
-                    </li>
+                    </li>-->
                 </ul>
             </div>
             <div class="footer">

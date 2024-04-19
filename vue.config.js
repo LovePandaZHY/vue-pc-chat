@@ -97,7 +97,7 @@ module.exports = {
             // outputDir: 'release',
             builderOptions: {
                 // 产品名称
-                productName: '野火IM',
+                productName: 'IM',
                 // 修改appId是，需要同时修改backgroud.js里面设置的appUserModelId，设置见：app.setAppUserModelId(xxx)
                 appId: pkg.appId,
                 compression: 'normal',
@@ -127,7 +127,7 @@ module.exports = {
                 },
                 linux: {
                     category: "Chat",
-                    executableName: '野火IM',
+                    executableName: 'IM',
                     target: [
                         'deb',
                         'AppImage'

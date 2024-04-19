@@ -273,7 +273,7 @@ let trayMenu = [
             isVisible ? mainWindow.hide() : mainWindow.show();
         }
     },
-    {
+   /* {
         type: 'separator'
     },
     {
@@ -289,7 +289,7 @@ let trayMenu = [
             mainWindow.show();
             mainWindow.toggleDevTools();
         }
-    },
+    },*/
     {
         type: 'separator'
     },

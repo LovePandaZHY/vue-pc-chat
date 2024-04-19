@@ -48,14 +48,14 @@
             </div>
         </div>
         <div class="ad-container">
-            <p>
-                <a target="_blank" href="https://wildfirechat.cn/">野火IM</a>
+<!--            <p>
+                <a target="_blank" href="https://wildfirechat.cn/">IM</a>
                 ，安全可靠、运维部署简单、方便二开和对接现有系统。
             </p>
-            <p>私有化部署，请微信联系：wildfirechat 或 wfchat </p>
+            <p>私有化部署，请微信联系：wildfirechat 或 wfchat </p>-->
         </div>
         <footer>
-            <p class="proto-version-info">{{ protoRevision() }}</p>
+<!--            <p class="proto-version-info">{{ protoRevision() }}</p>
             <a
                 class="button"
                 href="https://github.com/wildfirechat/vue-pc-chat/issues"
@@ -64,8 +64,8 @@
             </a>
             <a v-if="sharedMiscState.isElectron" class="button" target="_blank" @click.prevent.stop="openLogDir">
                 打开日志目录
-                <!--        <i class="icon-ion-ios-email-outline"/>-->
-            </a>
+                &lt;!&ndash;        <i class="icon-ion-ios-email-outline"/>&ndash;&gt;
+            </a>-->
             <a class="button" target="_blank" @click.prevent.stop="showChangePasswordContextMenu">
                 修改密码
                 <!--        <i class="icon-ion-ios-email-outline"/>-->
@@ -74,16 +74,16 @@
                 <li>
                     <a @click.prevent="showChangePasswordDialog()">密码验证</a>
                 </li>
-                <li>
+<!--                <li>
                     <a @click.prevent="showResetPasswordDialog()">短信验证码验证</a>
-                </li>
+                </li>-->
             </vue-context>
             <a class="button" target="_blank" @click="logout">
                 {{ $t('setting.exit_switch_user') }}
                 <!--        <i class="icon-ion-ios-email-outline"/>-->
             </a>
 
-            <a
+<!--            <a
                 class="button"
                 href="https://github.com/wildfirechat/vue-pc-chat"
                 target="_blank">
@@ -107,7 +107,7 @@
             >
                 打开野火PC端
                 <i class="icon-ion-android-desktop"/>
-            </a>
+            </a>-->
         </footer>
     </div>
 </template>

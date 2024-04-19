@@ -6,85 +6,84 @@
                                               v-if="sharedMiscState.isElectronWindowsOrLinux"/>
 
             <div class="drag-area"/>
-            <div v-if="loginType === 0" class="qrcode-login-container">
-                <div class="qr-container" @click="regenerateQrCode">
-                    <p v-if="qrCode === 'error'">生成二维码失败，点击重试<br>开发者请打开控制台查看日志</p>
-                    <img v-else-if="qrCode" v-bind:src="qrCode" alt="">
-                    <p v-else>{{ $t('misc.gen_qr_code') }}</p>
-                    <ClipLoader v-if="loginStatus === 4" class="loading" :color="'white'" :height="'80px'" :width="'80px'"/>
-                </div>
-                <!--    等待扫码-->
-                <div v-if="loginStatus === 0" class="pending-scan">
-                    <p style="font-size: 20px; color: #353535; padding-bottom: 10px">{{ $t('login.desc') }}</p>
-                    <p style="font-size: 15px; color: #a3a3a3">{{ $t('login.tip_web') }}</p>
-                    <p style="font-size: 15px; color: #a3a3a3; padding-bottom: 5px">{{ $t('login.warning') }}</p>
-                    <a style="font-size: 15px; color: #4168e0" target="_blank" href="https://static.wildfirechat.net/download_qrcode.png">点击下载野火IM移动端</a>
-                </div>
-                <!--    已经扫码-->
-                <div v-else-if="loginStatus === 1" class="scanned">
-                    <p>{{ userName + $t('login.scan_qr_success') }}</p>
-                    <p>{{ $t('login.confirm_login_tip') }}</p>
-                    <label>
-                        {{ $t('login.remember_me') }}
-                        <input type="checkbox" v-model="enableAutoLogin">
-                    </label>
-                    <button @click="cancel" class="button-cancel">{{ $t('login.cancel_login') }}</button>
-                </div>
+            <!--            <div v-if="loginType === 0" class="qrcode-login-container">
+                            <div class="qr-container" @click="regenerateQrCode">
+                                <p v-if="qrCode === 'error'">生成二维码失败，点击重试<br>开发者请打开控制台查看日志</p>
+                                <img v-else-if="qrCode" v-bind:src="qrCode" alt="">
+                                <p v-else>{{ $t('misc.gen_qr_code') }}</p>
+                                <ClipLoader v-if="loginStatus === 4" class="loading" :color="'white'" :height="'80px'" :width="'80px'"/>
+                            </div>
+                            &lt;!&ndash;    等待扫码&ndash;&gt;
+                            <div v-if="loginStatus === 0" class="pending-scan">
+                                <p style="font-size: 20px; color: #353535; padding-bottom: 10px">{{ $t('login.desc') }}</p>
+                                <p style="font-size: 15px; color: #a3a3a3">{{ $t('login.tip_web') }}</p>
+                                <p style="font-size: 15px; color: #a3a3a3; padding-bottom: 5px">{{ $t('login.warning') }}</p>
+                                <a style="font-size: 15px; color: #4168e0" target="_blank" href="https://static.wildfirechat.net/download_qrcode.png">点击下载IM移动端</a>
+                            </div>
+                            &lt;!&ndash;    已经扫码&ndash;&gt;
+                            <div v-else-if="loginStatus === 1" class="scanned">
+                                <p>{{ userName + $t('login.scan_qr_success') }}</p>
+                                <p>{{ $t('login.confirm_login_tip') }}</p>
+                                <label>
+                                    {{ $t('login.remember_me') }}
+                                    <input type="checkbox" v-model="enableAutoLogin">
+                                </label>
+                                <button @click="cancel" class="button-cancel">{{ $t('login.cancel_login') }}</button>
+                            </div>
 
-                <!--    存在session，等待发送给客户端验证-->
-                <div v-if="loginStatus === 2" class="pending-quick-login">
-                    <button @click="sendQuickLoginRequest" class="button-confirm">{{ $t('login.login') }}</button>
-                    <button @click="cancel" class="button-cancel">{{ $t('login.switch_user') }}</button>
-                </div>
+                            &lt;!&ndash;    存在session，等待发送给客户端验证&ndash;&gt;
+                            <div v-if="loginStatus === 2" class="pending-quick-login">
+                                <button @click="sendQuickLoginRequest" class="button-confirm">{{ $t('login.login') }}</button>
+                                <button @click="cancel" class="button-cancel">{{ $t('login.switch_user') }}</button>
+                            </div>
 
-                <!--    已经发送登录请求-->
-                <div v-else-if="loginStatus === 3" class="quick-logining">
-                    <p>{{ $t('login.confirm_login_tip') }}</p>
-                    <button @click="cancel" class="button-cancel">{{ $t('login.cancel_login') }}</button>
-                </div>
+                            &lt;!&ndash;    已经发送登录请求&ndash;&gt;
+                            <div v-else-if="loginStatus === 3" class="quick-logining">
+                                <p>{{ $t('login.confirm_login_tip') }}</p>
+                                <button @click="cancel" class="button-cancel">{{ $t('login.cancel_login') }}</button>
+                            </div>
 
-                <!--      开发调试时，自动登录-->
-                <div v-else-if="loginStatus === 4">
-                    <p>数据同步中...</p>
-                </div>
-            </div>
-            <div v-else-if="loginType === 1" class="login-form-container">
+                            &lt;!&ndash;      开发调试时，自动登录&ndash;&gt;
+                            <div v-else-if="loginStatus === 4">
+                                <p>数据同步中...</p>
+                            </div>
+                        </div>-->
+            <div  class="login-form-container">
                 <!--            密码登录-->
                 <img class="logo" :src="require(`@/assets/images/icon.png`)" alt="">
                 <p class="title">密码登录</p>
                 <div class="item">
-                    <input v-model.trim="mobile" class="text-input" type="number" placeholder="请输入手机号">
+                    <input v-model="mobile" class="text-input" type="number" placeholder="请输入警号">
                 </div>
                 <div class="item">
-                    <input v-model.trim="password" class="text-input" @keydown.enter="loginWithPassword" type="password" placeholder="请输入密码">
+                    <input v-model="password" class="text-input" @keydown.enter="loginWithPassword" type="password" placeholder="请输入密码">
                 </div>
-                <div v-if="loginStatus === 0" style="display: flex; justify-content: space-between; width: 100%; ">
-                    <p class="tip" @click="switchLoginType(2)">使用验证码登录</p>
-                    <p class="tip" @click="register">注册</p>
-                </div>
-                <button class="login-button" :disabled="mobile === '' || !password || password === ''" ref="loginWithPasswordButton" @click="loginWithPassword">{{ loginStatus === 3 ? '数据同步中...' : '登录' }}</button>
+                <!--                <div v-if="loginStatus === 0" style="display: flex; justify-content: space-between; width: 100%; ">
+                                    <p class="tip" @click="switchLoginType(2)">使用验证码登录</p>
+                                    <p class="tip" @click="register">注册</p>
+                                </div>-->
+                <button class="login-button"  ref="loginWithPasswordButton" @click="loginWithPassword">{{ loginStatus === 3 ? '数据同步中...' : '登录' }}</button>
                 <ClipLoader v-if="loginStatus === 3" class="syncing" :color="'#4168e0'" :height="'80px'" :width="'80px'"/>
             </div>
-            <div v-else class="login-form-container">
-                <!--            验证码登录-->
-                <img class="logo" :src="require(`@/assets/images/icon.png`)" alt="">
-                <p class="title">验证码登录</p>
-                <div class="item">
-                    <input v-model.trim="mobile" class="text-input" type="number" placeholder="请输入手机号">
-                </div>
-                <div class="item">
-                    <input v-model.trim="authCode" class="text-input" type="number" placeholder="验证码">
-                    <button :disabled="mobile.length !== 11" class="request-auth-code-button" @keydown.enter="loginWithAuthCode" @click="requestAuthCode">获取验证码</button>
-                </div>
-                <p v-if="loginStatus === 0" class="tip" @click="switchLoginType(1)">使用密码登录</p>
-                <button class="login-button" :disabled="mobile === '' || authCode === ''" ref="loginWithAuthCodeButton" @click="loginWithAuthCode">{{ loginStatus === 3 ? '数据同步中...' : '登录' }}</button>
-                <ClipLoader v-if="loginStatus === 3" style="margin-top: 10px" class="syncing" :color="'4168e0'" :height="'80px'" :width="'80px'"/>
-            </div>
-            <div v-if="loginStatus === 0" class="switch-login-type-container">
-                <p class="tip" @click="switchLoginType( loginType === 0 ? 1 : 0)">{{ loginType === 0 ? '使用密码/验证码登录' : '扫码登录' }}</p>
-            </div>
-
+            <!--            <div v-else class="login-form-container">
+                            <img class="logo" :src="require(`@/assets/images/icon.png`)" alt="">
+                            <p class="title">验证码登录</p>
+                            <div class="item">
+                                <input v-model="mobile" class="text-input" type="number" placeholder="请输入警号">
+                            </div>
+                            <div class="item">
+                                <input v-model="authCode" class="text-input" type="number" placeholder="验证码">
+                                <button :disabled="mobile.trim().length !== 11" class="request-auth-code-button" @keydown.enter="loginWithAuthCode" @click="requestAuthCode">获取验证码</button>
+                            </div>
+                            <p v-if="loginStatus === 0" class="tip" @click="switchLoginType(1)">使用密码登录</p>
+                            <button class="login-button" :disabled="mobile.trim() === '' || authCode.trim() === ''" ref="loginWithAuthCodeButton" @click="loginWithAuthCode">{{ loginStatus === 3 ? '数据同步中...' : '登录' }}</button>
+                            <ClipLoader v-if="loginStatus === 3" style="margin-top: 10px" class="syncing" :color="'4168e0'" :height="'80px'" :width="'80px'"/>
+                        </div>-->
+            <!--            <div v-if="loginStatus === 0" class="switch-login-type-container">
+                            <p class="tip" @click="switchLoginType( loginType === 0 ? 1 : 0)">{{ loginType === 0 ? '使用密码/验证码登录' : '扫码登录' }}</p>
+                        </div>-->
             <p v-if="sharedMiscState.isElectron" class="diagnose" @click="diagnose">诊断</p>
+            <a style="font-size: 15px; color: #4168e0;margin-top: 5px;text-decoration: none;" target="_blank" href="http://47.232.110.18:8180/chatManage">后台系统</a>
         </div>
     </div>
 </template>
@@ -119,7 +118,7 @@ export default {
             qrCodeTimer: null,
             appToken: '',
             lastAppToken: '',
-            loginType: 0, // 0 扫码登录，1 密码登录，2 验证码登录
+            loginType: 1, // 0 扫码登录，1 密码登录，2 验证码登录
             enableAutoLogin: false,
             mobile: '',
             password: '',
@@ -156,7 +155,7 @@ export default {
         }
     },
 
-    beforeUnmount() {
+    beforeDestroy() {
         wfc.eventEmitter.removeListener(EventType.ConnectionStatusChanged, this.onConnectionStatusChange)
     },
 
@@ -194,12 +193,11 @@ export default {
                 return;
             }
 
-            // 特殊用途，请勿打开
-            // wfc.setAppName('wfc-' + this.mobile);
             this.$refs.loginWithPasswordButton.disabled = true;
             this.loginStatus = 3;
             appServerApi.loinWithPassword(this.mobile, this.password)
                 .then(res => {
+                    this.$refs.loginWithPasswordButton.disabled = false;
                     const {userId, token, portrait} = res
                     this.firstTimeConnect = wfc.connect(userId, token);
                     setItem('userId', userId);
@@ -207,6 +205,7 @@ export default {
                     setItem("userPortrait", portrait);
                 })
                 .catch(err => {
+                    this.$refs.loginWithPasswordButton.disabled = false;
                     console.log('loginWithPassword err', err)
                     this.password = '';
                     this.loginStatus = 0;
@@ -225,7 +224,6 @@ export default {
 
             this.$refs.loginWithAuthCodeButton.disabled = true;
             this.loginStatus = 3;
-            //wfc.setAppName('wfc-' + this.mobile);
             appServerApi.loginWithAuthCode(this.mobile, this.authCode)
                 .then(res => {
                     const {userId, token, portrait} = res;
@@ -253,7 +251,6 @@ export default {
         },
 
         async createPCLoginSession(userId) {
-            //wfc.setAppName('wfc-' + this.mobile);
             appServerApi.createPCSession(userId)
                 .then(response => {
                     let session = Object.assign(new PCSession(), response);
@@ -329,7 +326,12 @@ export default {
                                 break
                         }
                     }
-                })
+                }).then(res =>{
+                //TODO 这里查询一下所有用户，获取用户与组织结构间的关系
+                /* organizationServerApi.getEmployeeAllList().then(res =>{
+                     console.log(res)
+                 })*/
+            })
                 .catch(err => {
                 });
         },
@@ -390,10 +392,11 @@ export default {
                         store.setEnableAutoLogin(this.enableAutoLogin)
                     }
                 }
-                organizationServerApi.login()
-                    .catch(r => {
-                        console.error('organizationServer login failed', r)
-                    });
+                /* organizationServerApi.login().then(res =>{
+
+                 }).catch(r => {
+                    console.error('organizationServer login failed', r)
+                 });*/
             }
         },
 
@@ -487,7 +490,7 @@ export default {
         }
     },
 
-    unmounted() {
+    destroyed() {
         if (this.qrCodeTimer) {
             clearInterval(this.qrCodeTimer)
         }

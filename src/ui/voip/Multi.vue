@@ -6,57 +6,66 @@
 <!--static STATUS_CONNECTED = 4;-->
 <!--}-->
 <template>
-    <div class="flex-column flex-align-center flex-justify-center" style="width: 100%; height: 100%; background: #292929">
+    <div class="flex-column flex-align-center flex-justify-center"
+         style="min-width: 100%; min-height: 100%;background-color: #292929;">
         <h1 style="display: none">Voip-Multi 运行在新的window，和主窗口数据是隔离的！！</h1>
 
         <p class="webrtc-tip" v-if="showWebrtcTip">
-            上线前，请部署 turn 服务，野火官方 turn 服务只能开发测试使用!!!
+            上线前，请部署 turn 服务!!
         </p>
         <div v-if="session" class="container">
-            <section>
+            <div style="display: flex; width: 100%;height: 100%;align-items: stretch;">
+                <div class="list-box">
+                    <div style="padding: 5px;">参加人员列表</div>
+                    <div class="user-list">
+                        <div class="participant-name" @click="selectParticipant(selfUserInfo.uid)">
+                            <p class="list-line">{{ '我' }}</p>
+                            <div style="font-weight: bolder;background-color:rgb(0, 255, 55);width: 10px;height: 10px;border-radius: 10px;"
+                                 v-if="selectedParticipantId === selfUserInfo.uid"></div>
+                        </div>
+                        <div v-for="(participant, index) in participantUserInfos" :key="index" class="participant-name"
+                             @click="selectParticipant(participant.uid)">
+                            <p class="list-line">{{ userName(participant) }}</p>
+                            <div style="font-weight: bolder;background-color:rgb(0, 255, 55);width: 10px;height: 10px;border-radius: 10px;"
+                                 v-if="selectedParticipantId === participant.uid"></div>
+                        </div>
+                    </div>
+                </div>
                 <!--audio-->
-                <div class="content-container">
+                <div class="content-container" style="flex:1">
                     <!--self-->
-                    <div class="participant-container">
+                    <div class="participant-container"
+                         :class="{ 'selected': selectedParticipantId === selfUserInfo.uid }"
+                         @click="selectParticipant(selfUserInfo.uid)">
                         <div v-if="audioOnly || !selfUserInfo._stream || selfUserInfo._isVideoMuted"
                              class="flex-column flex-justify-center flex-align-center">
                             <img class="avatar" :src="selfUserInfo.portrait">
-                            <video v-if="audioOnly && selfUserInfo._stream"
-                                   class="hidden-video"
-                                   :srcObject.prop="selfUserInfo._stream"
-                                   muted
-                                   webkit-playsinline playsinline x5-playsinline preload="auto"
-                                   autoPlay/>
+                            <video v-if="audioOnly && selfUserInfo._stream" class="hidden-video"
+                                   :srcObject.prop="selfUserInfo._stream" muted webkit-playsinline playsinline
+                                   x5-playsinline preload="auto" autoPlay />
                             <p>我</p>
                         </div>
-                        <video v-else
-                               class="video me"
-                               ref="localVideo"
-                               :srcObject.prop="selfUserInfo._stream"
-                               muted
-                               webkit-playsinline playsinline x5-playsinline preload="auto"
-                               autoPlay/>
+                        <video v-else class="video" ref="localVideo" :srcObject.prop="selfUserInfo._stream"
+                               :class="{ 'me': true, 'selected': selectedParticipantId === selfUserInfo.uid }" muted
+                               webkit-playsinline playsinline x5-playsinline preload="auto" autoPlay />
                     </div>
 
                     <!--participants-->
                     <div v-for="(participant) in participantUserInfos" :key="participant.uid"
-                         class="participant-container">
+                         class="participant-container" :class="{ 'selected': selectedParticipantId === participant.uid }"
+                         @click="selectParticipant(participant.uid)">
                         <div v-if="audioOnly || status !== 4 || !participant._stream || participant._isVideoMuted"
                              class="flex-column flex-justify-center flex-align-center">
                             <img class="avatar" :src="participant.portrait" :alt="participant">
-                            <video v-if="audioOnly && participant._stream"
-                                   class="hidden-video"
-                                   :srcObject.prop="participant._stream"
-                                   webkit-playsinline playsinline x5-playsinline preload="auto"
-                                   autoPlay/>
+                            <video v-if="audioOnly && participant._stream" class="hidden-video"
+                                   :srcObject.prop="participant._stream" webkit-playsinline playsinline x5-playsinline
+                                   preload="auto" autoPlay />
                             <p class="single-line">{{ userName(participant) }}</p>
                         </div>
-                        <video v-else
-                               class="video"
+                        <video v-else class="video"
                                @click="switchVideoType(participant.uid, participant._isScreenSharing)"
-                               :srcObject.prop="participant._stream"
-                               webkit-playsinline playsinline x5-playsinline preload="auto"
-                               autoPlay/>
+                               :srcObject.prop="participant._stream" webkit-playsinline playsinline x5-playsinline
+                               preload="auto" autoPlay />
                     </div>
                     <!--add more-->
                     <!--通话建立成功之后，才允许邀请新参与者-->
@@ -64,58 +73,58 @@
                          class="participant-container">
                         <img @click="invite" class="avatar" src="@/assets/images/add.png">
                     </div>
-                </div>
-            </section>
+                    <!--actions-->
+                    <footer style="order: 5;width: 100%;">
+                        <!--incoming-->
+                        <div v-if="status === 2" class="action-container">
+                            <div class="action">
+                                <img @click="hangup" class="action-img" src='@/assets/images/av_hang_up.png' />
+                            </div>
+                            <div class="action">
+                                <img @click="answer" class="action-img" src='@/assets/images/av_video_answer.png' />
+                            </div>
+                            <div v-if="!audioOnly" class="action">
+                                <img @click="down2voice" class="action-img" src='@/assets/images/av_float_audio.png' />
+                                <p>切换到语音聊天</p>
+                            </div>
+                        </div>
+                        <!--outgoing-->
+                        <div v-if="status === 1 || status === 3" class="action-container">
+                            <div class="action">
+                                <img @click="hangup" class="action-img" src='@/assets/images/av_hang_up.png' />
+                            </div>
+                        </div>
 
-            <!--actions-->
-            <footer>
-                <!--incoming-->
-                <div v-if="status === 2" class="action-container">
-                    <div class="action">
-                        <img @click="hangup" class="action-img" src='@/assets/images/av_hang_up.png'/>
-                    </div>
-                    <div class="action">
-                        <img @click="answer" class="action-img" src='@/assets/images/av_video_answer.png'/>
-                    </div>
-                    <div v-if="!audioOnly" class="action">
-                        <img @click="down2voice" class="action-img" src='@/assets/images/av_float_audio.png'/>
-                        <p>切换到语音聊天</p>
-                    </div>
-                </div>
-                <!--outgoing-->
-                <div v-if="status === 1 || status === 3" class="action-container">
-                    <div class="action">
-                        <img @click="hangup" class="action-img" src='@/assets/images/av_hang_up.png'/>
-                    </div>
-                </div>
+                        <!--connected-->
+                        <div v-if="status === 4" class="duration-action-container">
+                            <p>{{ duration }}</p>
+                            <div class="action-container">
 
-                <!--connected-->
-                <div v-if="status === 4" class="duration-action-container">
-                    <p>{{ duration }}</p>
-                    <div class="action-container">
-
-                        <div class="action">
-                            <img @click="hangup" class="action-img" src='@/assets/images/av_hang_up.png'/>
+                                <div class="action">
+                                    <img @click="hangup" class="action-img" src='@/assets/images/av_hang_up.png' />
+                                </div>
+                                <div class="action">
+                                    <img v-if="!session.audioMuted" @click="mute" class="action-img"
+                                         src='@/assets/images/av_mute.png' />
+                                    <img v-else @click="mute" class="action-img"
+                                         src='@/assets/images/av_mute_hover.png' />
+                                    <p>静音</p>
+                                </div>
+                                <div v-if="!session.audioOnly" class="action">
+                                    <img v-if="!session.videoMuted" @click="muteVideo" class="action-img"
+                                         src='@/assets/images/av_conference_video.png' />
+                                    <img v-else @click="muteVideo" class="action-img"
+                                         src='@/assets/images/av_conference_video_mute.png' />
+                                    <p>关闭摄像头</p>
+                                </div>
+                                <div v-if="!audioOnly && false" class="action">
+                                    <img @click="screenShare" class="action-img" src='@/assets/images/av_share.png' />
+                                </div>
+                            </div>
                         </div>
-                        <div class="action">
-                            <img v-if="!session.audioMuted" @click="mute" class="action-img"
-                                 src='@/assets/images/av_mute.png'/>
-                            <img v-else @click="mute" class="action-img" src='@/assets/images/av_mute_hover.png'/>
-                            <p>静音</p>
-                        </div>
-                        <div v-if="!session.audioOnly" class="action">
-                            <img v-if="!session.videoMuted" @click="muteVideo" class="action-img"
-                                 src='@/assets/images/av_conference_video.png'/>
-                            <img v-else @click="muteVideo" class="action-img"
-                                 src='@/assets/images/av_conference_video_mute.png'/>
-                            <p>关闭摄像头</p>
-                        </div>
-                        <div v-if="!audioOnly && false" class="action">
-                            <img @click="screenShare" class="action-img" src='@/assets/images/av_share.png'/>
-                        </div>
-                    </div>
+                    </footer>
                 </div>
-            </footer>
+            </div>
         </div>
     </div>
 </template>
@@ -124,7 +133,7 @@
 import avenginekit from "../../wfc/av/internal/engine.min";
 import CallSessionCallback from "../../wfc/av/engine/callSessionCallback";
 import CallState from "../../wfc/av/engine/callState";
-import {isElectron} from "../../platform";
+import { isElectron } from "../../platform";
 import ScreenOrWindowPicker from "./ScreenOrWindowPicker";
 import MultiCallOngoingMessageContent from "../../wfc/av/messages/multiCallOngoingMessageContent";
 import VideoType from "../../wfc/av/engine/videoType";
@@ -151,9 +160,14 @@ export default {
             showWebrtcTip: false,
 
             ringAudio: null,
+
+            selectedParticipantId: null, // 当前选中的参与者ID
         }
     },
     methods: {
+        selectParticipant(participantId) {
+            this.selectedParticipantId = participantId;
+        },
         // 用来解决 iOS 上，不能自动播放问题
         autoPlay() {
             if (isElectron()) {
@@ -181,12 +195,7 @@ export default {
 
                         for (const video of videos) {
                             if (video.paused) {
-                                let p = video.play();
-                                if (p !== undefined) {
-                                    p.catch(err => {
-                                        // do nothing
-                                    })
-                                }
+                                video.play();
                             }
                         }
                     } catch (e) {
@@ -263,6 +272,7 @@ export default {
                 this.participantUserInfos = [...participantUserInfos];
                 this.groupMemberUserInfos = groupMemberUserInfos;
 
+                // pls refer to: https://vuejs.org/v2/guide/reactivity.html
                 this.$set(this.selfUserInfo, '_stream', null)
                 this.participantUserInfos.forEach(p => this.$set(p, "_stream", null))
                 this.groupMemberUserInfos.forEach(m => this.$set(m, "_stream", null))
@@ -282,6 +292,7 @@ export default {
             };
 
             sessionCallback.didReceiveRemoteVideoTrack = (userId, stream) => {
+                console.log("收到了语音消息：" + userId)
                 let p;
                 for (let i = 0; i < this.participantUserInfos.length; i++) {
                     p = this.participantUserInfos[i];
@@ -424,7 +435,7 @@ export default {
                     };
                     this.$modal.show(
                         ScreenOrWindowPicker,
-                        {}, null, {
+                        {}, {
                             width: 800,
                             height: 600,
                             name: 'screen-window-picker-modal',
@@ -516,12 +527,12 @@ export default {
         }
 
         if (isElectron()) {
-        avenginekit.setup();
+            avenginekit.setup();
         }
         this.setupSessionCallback();
     },
 
-    unmounted() {
+    destroyed() {
         // reset
         this.$set(this.selfUserInfo, '_stream', null)
         this.groupMemberUserInfos.forEach(m => this.$set(m, "_stream", null))
@@ -533,7 +544,6 @@ export default {
 </script>
 
 <style lang="css" scoped>
-
 .container {
     width: 100%;
     height: 100%;
@@ -544,6 +554,7 @@ export default {
 
 .content-container {
     width: 100%;
+    height: 100%;
     position: relative;
     display: flex;
     flex-wrap: wrap;
@@ -562,7 +573,7 @@ export default {
     align-items: center;
 }
 
-.participant-container > video {
+.participant-container>video {
     max-width: 100%;
     max-height: 100%;
     width: 100%;
@@ -634,5 +645,107 @@ footer {
     left: 0;
     top: 0;
     z-index: 999;
+}
+
+
+
+/* --- */
+.container {
+    display: flex;
+    flex-wrap: nowrap;
+    justify-content: center;
+    flex-direction: column;
+}
+
+.participant-container {
+    width: 200px;
+    height: 220px;
+    margin: 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    cursor: pointer;
+    transition: transform 0.3s ease;
+}
+
+/* .participant-container.selected {
+    transform: scale(1.5);
+    z-index: 1;
+} */
+
+.video {
+    width: 100%;
+    height: auto;
+}
+
+.me {
+    transform: scaleX(-1);
+    /* 翻转自己的视频 */
+}
+
+
+/* .container {
+    display: flex;
+    flex-direction: column;
+} */
+
+.participant-container {
+    width: 200px;
+    order: 3;
+}
+
+.participant-container.selected {
+    order: 1;
+    /* height: 300px; */
+    /* transform: scale(5);  */
+    height: 40%;
+    padding: 0 30%;
+    width: 100%;
+}
+
+.list-box {
+    width: 13%;
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    background-color: rgba(255, 255, 255, 0.56);
+    margin: 10px;
+    padding: 15px;
+}
+
+/* 用户列表 */
+.user-list {
+    width: 100%;
+    height: 100%;
+
+    font-weight: bold;
+    /* 最大高度不超过视窗高度，避免超出屏幕 */
+    overflow-y: auto;
+    /* 超出部分垂直滚动 */
+    /* 背景色为白色，增加可读性 */
+    z-index: 1000;
+    /* 高层级以确保不被其他元素遮盖 */
+}
+
+.participant-name {
+    display: flex;
+    justify-content: space-between;
+    padding: 5px;
+    border-bottom: 1px solid #ddd;
+    align-items: center;
+    /* 每个参与者之间的分隔线 */
+}
+
+.list-line {
+    white-space: nowrap;
+    /* 不换行 */
+    overflow: hidden;
+    /* 超出隐藏 */
+    text-overflow: ellipsis;
+    /* 显示省略号 */
+    width: 100%;
+    /* 宽度填满容器 */
 }
 </style>

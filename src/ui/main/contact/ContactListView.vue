@@ -24,7 +24,7 @@
                 </div>
                 <GroupListVue v-if="sharedContactState.expandGroup"/>
             </li>
-            <li>
+<!--            <li>
                 <div @click="showChannels" class="category-item-container">
                     <i class="arrow right" v-bind:class="{down: sharedContactState.expandChanel}"></i>
                     <div class="category-item">
@@ -33,7 +33,7 @@
                     </div>
                 </div>
                 <ChannelListView v-if="sharedContactState.expandChanel"/>
-            </li>
+            </li>-->
             <li>
                 <div @click="showOrganization" class="category-item-container">
                     <i class="arrow right" v-bind:class="{down: sharedContactState.expandOrganization}"></i>
@@ -44,7 +44,7 @@
                 </div>
                 <OrganizationListView v-if="sharedContactState.expandOrganization"/>
             </li>
-            <li>
+<!--            <li>
                 <div @click="showChatroom" class="category-item-container">
                     <i class="arrow right" v-bind:class="{down: sharedContactState.expandChatroom}"></i>
                     <div class="category-item">
@@ -55,7 +55,7 @@
                     </div>
                 </div>
                 <ChatroomListView v-if="sharedContactState.expandChatroom"/>
-            </li>
+            </li>-->
             <li>
                 <div @click="showContacts" class="category-item-container">
                     <i class="arrow right" v-bind:class="{down: sharedContactState.expandFriendList}"></i>

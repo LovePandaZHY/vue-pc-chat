@@ -118,12 +118,11 @@ export class AvEngineKitProxy {
             this.participants.push(content.participants);
         } else if (content.type === MessageContentType.VOIP_CONTENT_TYPE_END) {
             console.log('to send end message', content.reason, content);
-            // 窗口关闭时，会重置
-            // this.conversation = null;
-            // this.queueEvents = [];
-            // this.callId = null;
-            // this.inviteMessageUid = null;
-            // this.participants = [];
+            this.conversation = null;
+            this.queueEvents = [];
+            this.callId = null;
+            this.inviteMessageUid = null;
+            this.participants = [];
             // 仅仅为了通知proxy，其他端已经接听电话了，关闭窗口时，不应当发送挂断信令
             if (!content.callId) {
                 return;
@@ -288,8 +287,8 @@ export class AvEngineKitProxy {
                 msg.participantUserInfos = participantUserInfos;
                 msg.selfUserInfo = selfUserInfo;
                 msg.timestamp = longValue(numberValue(msg.timestamp) - delta)
-                // start消息，显示 ui 的时候，会传过去，这儿就不用再次传了
-                if (this.callWin && [MessageContentType.VOIP_CONTENT_TYPE_START].indexOf(msg.messageContent.type) === -1) {
+                // 这两条消息，显示 ui 的时候，会传过去，这儿就不用再次传了
+                if (this.callWin && [MessageContentType.VOIP_CONTENT_TYPE_START, MessageContentType.VOIP_CONTENT_TYPE_ADD_PARTICIPANT].indexOf(msg.messageContent.type) === -1) {
                     this.emitToVoip("message", msg);
                 }
             }
@@ -303,14 +302,7 @@ export class AvEngineKitProxy {
             if (this.isVoipWindowReady) {
                 // fix object of long.js can be send inter-process
                 args = JSON.stringify(args)
-                if (!this.callWin.isDestroyed()){
-                    try {
-                        this.callWin.webContents.send(event, args);
-                    }catch (e) {
-                        // ignore, do nothing
-                        // Object has been destroyed
-                    }
-                }
+                this.callWin.webContents.send(event, args);
             } else if (this.queueEvents) {
                 this.queueEvents.push({event, args});
             }
@@ -362,9 +354,6 @@ export class AvEngineKitProxy {
             this.onVoipCallErrorCallback && this.onVoipCallErrorCallback(-2);
             return;
         }
-        // vue3里面，delete property 会触发reactivity
-        conversation = Object.assign(new Conversation(), conversation)
-        delete conversation._target;
 
         let selfUserInfo = wfc.getUserInfo(wfc.getUserId());
         participants = participants.filter(uid => uid !== selfUserInfo.uid);
@@ -379,6 +368,7 @@ export class AvEngineKitProxy {
             let memberIds = wfc.getGroupMemberIds(conversation.target);
             groupMemberUserInfos = wfc.getUserInfos(memberIds, conversation.target);
         }
+        delete conversation._target;
         this.showCallUI(conversation, false, {
             event: 'startCall',
             args: {
@@ -525,8 +515,11 @@ export class AvEngineKitProxy {
                 height = 640;
                 break;
             case 'multi':
+                width = 1200;
+                height = 750;
+                break;
             case 'conference':
-                width = 960;
+                width = 980;
                 height = 600;
                 minWidth = 800;
                 minHeight = 480;
@@ -545,6 +538,7 @@ export class AvEngineKitProxy {
                     maximizable: true,
                     transparent: !!isConference,
                     frame: !isConference,
+                    backgroundColor: '#292929', // 设置背景颜色为深灰色
                     webPreferences: {
                         scrollBounce: false,
                         nativeWindowOpen: true,
@@ -553,8 +547,11 @@ export class AvEngineKitProxy {
                     },
                 }
             );
+            if(type=="multi") win.maximize()
+            // win.webContents.openDevTools();
             this.callWin = win;
             this.isVoipWindowReady = false;
+
             // const remoteMain = require("@electron/remote").require("@electron/remote/main");
             const remoteMain = remote.require("@electron/remote/main");
             remoteMain.enable(win.webContents);
@@ -588,8 +585,7 @@ export class AvEngineKitProxy {
             this.callWin = window;
             console.log('windowEmitter subscribe events');
             this.events.once('close-voip-div', () => {
-                console.log('on close-voip-div', this.conversation, this.onVoipCallStatusCallback)
-                this.onVoipCallStatusCallback && this.onVoipCallStatusCallback(this.conversation, false)
+                this.onVoipCallStatusCallback && this.conversation && this.onVoipCallStatusCallback(this.conversation, false)
                 this.callWin = null;
                 this.isVoipWindowReady = false;
                 if (this.conference) {
@@ -599,15 +595,13 @@ export class AvEngineKitProxy {
                 this.conference = false;
                 this.callId = null;
                 this.conversation = null;
-                this.participants = [];
-                this.queueEvents = [];
             })
             // 等 voip view mounted
             setTimeout(() => {
                 this.isVoipWindowReady = true;
                 this.emitToVoip(options.event, options.args);
             }, 200)
-            this.onVoipCallStatusCallback && this.onVoipCallStatusCallback(this.conversation, true)
+            this.onVoipCallStatusCallback && this.conversation && this.onVoipCallStatusCallback(this.conversation, true)
         }
     }
 
@@ -624,6 +618,7 @@ export class AvEngineKitProxy {
         setTimeout(() => {
             this.onVoipCallStatusCallback && this.onVoipCallStatusCallback(this.conversation, false);
             this.conversation = null;
+            this.queueEvents = [];
             if (this.conference) {
                 wfc.quitChatroom(this.callId);
                 this.conference = false;

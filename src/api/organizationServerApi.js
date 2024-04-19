@@ -89,7 +89,8 @@ export class OrganizationServerApi {
     }
 
     searchEmployee(orgId, keyword) {
-        return this._post('/api/employee/search', {organizationId: orgId, keyword: keyword});
+        return this._post('/api/baseinfo/test/userData/queryUserExtendDataPager.rest', params||{})
+        //return this._post('/api/employee/search', {organizationId: orgId, keyword: keyword});
     }
 
     async getOrganizationPath(organizationId) {

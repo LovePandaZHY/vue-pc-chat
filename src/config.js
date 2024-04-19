@@ -2,8 +2,10 @@ import {isElectron} from './platform'
 import wfc from "./wfc/client/wfc";
 
 export default class Config {
+    //后台系统
+    static backEnd = 'http://10.81.67.118:8899/chatManage/organizationManage';
     // 调试用
-    static ENABLE_AUTO_LOGIN = true;
+    static ENABLE_AUTO_LOGIN = false;
     // 是否支持多人音视频通话
     static ENABLE_MULTI_VOIP_CALL = true;
     // 是否支持1对1音视频通话
@@ -19,24 +21,31 @@ export default class Config {
 
     // APP SERVER的地址，不能省略http(s)前缀。
     // 默认的app server使用端口是8888，注意端口号别忘记了。
-    // 上线建议使用https，使用https更安全。
-    //static APP_SERVER = 'http://app.wildfirechat.net:8888';
-    static APP_SERVER = 'https://app.wildfirechat.net';
+    // 上线建议使用https，使用https更安全。s
+    //static APP_SERVER = 'http://47.232.110.18:8180/chatManage/baseinfo';
+    static APP_SERVER = 'http://10.81.67.118:8180/chatManage/baseinfo';
+    //static APP_SERVER = 'http://10.81.66.71:8880';
+    //static APP_SERVER = 'http://47.232.110.18:8888';//抚州公安局环境
+    //static APP_SERVER = 'https://app.wildfirechat.net';
 
     // 组织结构服务地址，如果没有部署组织结构服务，或者不需要组织结构的话，可置为 null
     // 组织结构项目：https://github.com/wildfirechat/organization-platform 或 https://gitee.com/wfchat/organization-platform
-    static ORGANIZATION_SERVER = 'https://org.wildfirechat.cn';
+    //static ORGANIZATION_SERVER = 'http://47.232.110.18:8880';
+    //static ORGANIZATION_SERVER = 'http://47.232.110.18:8180/chatManage/baseinfo';
+    static ORGANIZATION_SERVER = 'http://10.81.67.118:8180/chatManage/baseinfo';
+    //static ORGANIZATION_SERVER = 'http://127.0.0.1:8180/chatManage/baseinfo';
+    //static ORGANIZATION_SERVER = 'http://10.81.66.71:8880';
+    //static ORGANIZATION_SERVER = 'https://org.wildfirechat.cn';
 
     // 野火二维码 scheme，不要修改，如果需要修改的话，所有端都需要一起修改
     static QR_CODE_PREFIX_PC_SESSION = "wildfirechat://pcsession/";
 
-    // 如果使用的是高级版音视频 SDK，则不需要配置 ICE_SERVER，否则需要配置。
-    // 请参考 src/wfc/av/internal/README.MD 切换音视频 SDK
     // turn server 配置，可以添加多个
     // !!! 我们提供的服务仅供用户测试和体验，为了保证测试可用，我们会不定期的更改密码. !!!
     // 上线时，请一定要切换为你们自己部署的服务
     // 格式: [uri, 用户名, 密码]，可以添加多个
-    static ICE_SERVERS = [['turn:turn.wildfirechat.net:3478', 'wfchat', 'wfchat1']];
+    static ICE_SERVERS = [['turn:10.81.66.71:3478', 'zxct', 'zte-v123456']];
+    // static ICE_SERVERS = [['turn:47.232.110.18:3478', 'zxct', 'zte-v123456']]; //公安局环境
     static LANGUAGE = 'zh_CN';
 
     static SDK_PLATFORM_WINDOWS = 3;
@@ -58,11 +67,11 @@ export default class Config {
 
     static SECRET_CHAT_MEDIA_DECODE_SERVER_PORT = 7982;
     // 如果不支持工作台，将其置空即可
-    static OPEN_PLATFORM_WORK_SPACE_URL = 'https://open.wildfirechat.cn/work.html';
+    static OPEN_PLATFORM_WORK_SPACE_URL = '';
     static OPEN_PLATFORM_SERVE_PORT = 7983;
 
     // 允许主动加入多人音视频通话
-    static ENABLE_MULTI_CALL_AUTO_JOIN = false;
+    static ENABLE_MULTI_CALL_AUTO_JOIN = true;
 
     // 需要专业版 im-server 才支持，是否打开语音对讲功能，和对讲机类似的功能，不是发送语音消息
     static ENABLE_PTT = true;

@@ -2060,7 +2060,7 @@ let store = {
     },
 
     updateLinuxTitle(unreadCount) {
-        this.updateLinuxTitle.title = '野火IM';
+        this.updateLinuxTitle.title = 'IM';
         this.updateLinuxTitle.unreadCount = unreadCount;
         this.updateLinuxTitle.showTitle = true;
         if (!miscState.linuxUpdateTitleInterval) {

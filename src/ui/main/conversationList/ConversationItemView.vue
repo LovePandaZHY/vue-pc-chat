@@ -23,7 +23,9 @@
                     <i v-if="source.conversation.type === 5" class="icon-ion-android-lock" style="padding-right: 5px"></i>
                     <div v-if="isOrganizationGroupConversation" style="display: flex; align-items: center; max-width: calc(100% - 60px)">
                         <h2 class="title single-line">{{ conversationTitle }}</h2>
-                        <p class="single-line" style="background: #3f64e4; border-radius: 2px; color: white; padding: 1px 2px; font-size: 9px">官方</p>
+<!--
+                        <p class="single-line" style="background: #3f64e4; border-radius: 2px; color: white; padding: 1px 2px; font-size: 9px">抚州市公安局</p>
+-->
                     </div>
                     <h2 v-else class="title single-line">{{ conversationTitle }}</h2>
                     <p class="time single-line">{{ source._timeStr }}</p>

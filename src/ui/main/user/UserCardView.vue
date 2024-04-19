@@ -23,14 +23,14 @@
                                placeholder="备注名"/>
                     </div>
                 </li>
-                <li>
+<!--                <li>
                     <label>{{ $t('common.area') }}</label>
                     <div>{{ $t('misc.beijing') }}</div>
                 </li>
                 <li>
                     <label>{{ $t('common.label') }}</label>
                     <div>{{ $t('misc.test_user') }}</div>
-                </li>
+                </li>-->
             </ul>
         </div>
         <div class="action">

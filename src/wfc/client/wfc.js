@@ -2411,7 +2411,7 @@ export class WfcManager {
     }
 
     defaultUserPortrait(userInfo) {
-        return `${Config.APP_SERVER}/avatar?name=${encodeURIComponent(userInfo.displayName)}`
+        return `${Config.APP_SERVER}/avatar?uid=${userInfo.uid}&name=${encodeURIComponent(userInfo.displayName)}`
         // return `http://localhost:8888/avatar?name=${encodeURIComponent(userInfo.displayName)}`
     }
 

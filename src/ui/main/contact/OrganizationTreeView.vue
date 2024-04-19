@@ -7,8 +7,10 @@
         </div>
         <nav class="breadcrumb">
             <ul>
-                <li v-for="org in currentOrganizationPathList" :key="org.id">
-                    <a href="#" @click.prevent="loadAndShowOrganization(org)">{{ org.name }}</a>
+                <li v-for="org in currentOrganizationPathList" :key="org.id" @click="loadAndShowOrganization({id: org.fatherId})">
+                    <a href="#" >{{ org.name }}</a>
+                    <span style="position: absolute;right: 10px;color: #3f64e4;cursor: pointer" v-if="org.fatherId!=null"
+                          @click="loadAndShowOrganization({id: org.fatherId})">返回上一级</span>
                 </li>
             </ul>
         </nav>
@@ -79,6 +81,7 @@ export default {
     },
     methods: {
         loadAndShowOrganization(org) {
+            if(org.id == null)return;
             organizationServerApi.getOrganizationEx(org.id)
                 .then(res => {
                     this.subOrganizations = res.subOrganizations;

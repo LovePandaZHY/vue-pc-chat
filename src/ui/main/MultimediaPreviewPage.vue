@@ -68,7 +68,7 @@ export default {
     },
 
     created() {
-        document.title = '野火IM消息预览';
+        document.title = '消息预览';
         let hash = window.location.hash;
 
         if (hash.indexOf('messageUid=') >= 0) {
