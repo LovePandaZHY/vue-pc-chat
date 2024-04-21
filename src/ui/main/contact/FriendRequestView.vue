@@ -6,12 +6,10 @@
                 <p class="title">{{ $t('friend_request.request') }}</p>
                 <p class="desc">{{ $t('friend_request.send_request_tip', [userInfo.displayName]) }}</p>
             </div>
-            <label>
-                <input type="text" :placeholder="defaultReason" v-model="reason">
-            </label>
+
             <div class="action-container">
                 <button class="cancel" @click="cancel">{{ $t('common.cancel') }}</button>
-                <button class="confirm" @click="invite">{{ $t('common.send') }}</button>
+                <button class="confirm" @click="invite">添加</button>
             </div>
         </div>
     </div>
@@ -21,11 +19,12 @@
 <script>
 import wfc from "../../../wfc/client/wfc";
 import store from "../../../store";
-
+import Config from "../../../config";
+import axios from "axios";
 export default {
     name: "FriendRequestView",
     props: {
-        userInfo: {
+        userInfo: {//对方信息
             type: Object,
             required: true,
         }
@@ -41,12 +40,32 @@ export default {
             this.$modal.hide('friend-request-modal')
         },
         invite() {
+           //这里改成自动加好友，无需对方同意。发请求导我们自己的后台。
+            let userId = this.sharedContactState.selfUserInfo.uid;
+            let targetId = this.userInfo.uid;
+            //添加好友
+            let url = Config.APP_SERVER +"/api/baseinfo/employeeData/setUserFriend.rest";
+            //alert(url);
+            let appServerResponse = axios({
+                url: url ,
+                method: 'post',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                params:{
+                    userId: userId,targetId:targetId
+                }
+            }).then((res) => {
+                console.log(res)
+            })
+            /*  这里是原来发送好友请求的
             wfc.sendFriendRequest(this.userInfo.uid, this.reason, null, () => {
                 // TODO
                 console.log('send friendRequest success', this.userInfo.uid)
             }, (err) => {
                 // TODO
             });
+             */
             this.$modal.hide('friend-request-modal')
         }
     },
