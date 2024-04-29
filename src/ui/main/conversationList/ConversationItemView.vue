@@ -212,13 +212,13 @@ export default {
         portrait() {
             let info = this.source;
             if (info.conversation.type === ConversationType.Group) {
-                if (info.conversation._target.portrait) {
+                if (info.conversation._target && info.conversation._target.portrait) {
                     return info.conversation._target.portrait;
                 } else {
                     return this.groupPortrait;
                 }
             } else {
-                return info.conversation._target.portrait;
+                return info.conversation._target?.portrait;
             }
         }
     },

@@ -21,8 +21,8 @@ export default class Config {
     // 默认的app server使用端口是8888，注意端口号别忘记了。
     // 上线建议使用https，使用https更安全。s
     //static APP_SERVER = 'http://47.232.110.18:8180/chatManage/baseinfo';
-    //static APP_SERVER = 'http://10.81.67.118:8180/chatManage/baseinfo';
-    static APP_SERVER = 'http://10.81.66.70:8180/chatManage/baseinfo';
+    static APP_SERVER = 'http://10.81.67.118:8180/chatManage/baseinfo';
+    //static APP_SERVER = 'http://10.81.66.70:8180/chatManage/baseinfo';
     //static APP_SERVER = 'http://10.81.66.71:8880';
     //static APP_SERVER = 'http://47.232.110.18:8888';//抚州公安局环境
     //static APP_SERVER = 'https://app.wildfirechat.net';
@@ -31,7 +31,8 @@ export default class Config {
     // 组织结构项目：https://github.com/wildfirechat/organization-platform 或 https://gitee.com/wfchat/organization-platform
     //static ORGANIZATION_SERVER = 'http://47.232.110.18:8880';
     //static ORGANIZATION_SERVER = 'http://47.232.110.18:8180/chatManage/baseinfo';
-    static ORGANIZATION_SERVER = 'http://10.81.66.70:8180/chatManage/baseinfo';
+    static ORGANIZATION_SERVER = 'http://10.81.67.118:8180/chatManage/baseinfo';
+    //static ORGANIZATION_SERVER = 'http://10.81.66.70:8180/chatManage/baseinfo';
     //static ORGANIZATION_SERVER = 'http://127.0.0.1:8180/chatManage/baseinfo';
     //static ORGANIZATION_SERVER = 'http://10.81.66.71:8880';
     //static ORGANIZATION_SERVER = 'https://org.wildfirechat.cn';

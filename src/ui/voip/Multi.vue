@@ -39,7 +39,7 @@
                          @click="selectParticipant(selfUserInfo.uid)">
                         <div v-if="audioOnly || !selfUserInfo._stream || selfUserInfo._isVideoMuted"
                              class="flex-column flex-justify-center flex-align-center">
-                            <img class="avatar" :src="selfUserInfo.portrait">
+                            <img class="avatar" :src="selfUserInfo?.portrait">
                             <video v-if="audioOnly && selfUserInfo._stream" class="hidden-video"
                                    :srcObject.prop="selfUserInfo._stream" muted webkit-playsinline playsinline
                                    x5-playsinline preload="auto" autoPlay />
@@ -56,15 +56,15 @@
                          @click="selectParticipant(participant.uid)">
                         <div v-if="audioOnly || status !== 4 || !participant._stream || participant._isVideoMuted"
                              class="flex-column flex-justify-center flex-align-center">
-                            <img class="avatar" :src="participant.portrait" :alt="participant">
-                            <video v-if="audioOnly && participant._stream" class="hidden-video"
-                                   :srcObject.prop="participant._stream" webkit-playsinline playsinline x5-playsinline
+                            <img class="avatar" :src="participant?.portrait" :alt="participant">
+                            <video v-if="audioOnly && participant?._stream" class="hidden-video"
+                                   :srcObject.prop="participant?._stream" webkit-playsinline playsinline x5-playsinline
                                    preload="auto" autoPlay />
                             <p class="single-line">{{ userName(participant) }}</p>
                         </div>
                         <video v-else class="video"
-                               @click="switchVideoType(participant.uid, participant._isScreenSharing)"
-                               :srcObject.prop="participant._stream" webkit-playsinline playsinline x5-playsinline
+                               @click="switchVideoType(participant.uid, participant?._isScreenSharing)"
+                               :srcObject.prop="participant?._stream" webkit-playsinline playsinline x5-playsinline
                                preload="auto" autoPlay />
                     </div>
                     <!--add more-->
